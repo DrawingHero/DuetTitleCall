@@ -9,24 +9,18 @@ pub struct TitleSequence {
     isherofemale: bool,
     // End here
 }
-#[skyline::hook(offset = 0x2206350)]
-pub fn titlesequence_oncreate(_this: &TitleSequence, method_info: OptionalMethod) {
-    //Call the original function
-    //This sets up who announces the title screen
-    return call_original!(_this, method_info);
-}
-#[skyline::hook(offset = 0x22068d0)]
-pub fn titlesequence_playvoicecommon(_this: &TitleSequence, soundeventname: &'static Il2CppString, isherofemale: bool, method_info: OptionalMethod) {
-    //Call the original function
-    call_original!(_this, soundeventname, isherofemale, method_info)
-}
+
+#[skyline::from_offset(0x2206350)]
+unsafe fn titlesequence_oncreate(_this: &TitleSequence, method_info: OptionalMethod);
+#[skyline::from_offset(0x22068d0)]
+unsafe fn titlesequence_playvoicecommon(_this: &TitleSequence, soundeventname: &'static Il2CppString, isherofemale: bool, method_info: OptionalMethod);
 #[skyline::hook(offset = 0x2206ab0)]
 pub fn titlesequence_playsubtitlevoice(_this: &TitleSequence, method_info: OptionalMethod) {
     //Reroll the PID or GID
     //This is done by calling the function that decides up who voices title screen again, after the "Fire Emblem" (Title) and before the "Engage" (Subtitle)
-    titlesequence_oncreate(_this, method_info);
+    unsafe { titlesequence_oncreate(_this, method_info) };
     //Play the specific voice line just like the original App.TitleSequence.ProcTitleCall$$PlaySubtitleVoice
-    titlesequence_playvoicecommon(_this,Il2CppString::new("V_Title_02"), false, method_info);
+    unsafe { titlesequence_playvoicecommon(_this,Il2CppString::new("V_Title_02"), false, method_info) };
     return;
 }
 /// The internal name of your plugin. This will show up in crash logs. Make it 8 characters long at max.
@@ -72,5 +66,5 @@ pub fn main() {
     // Do keep in mind that hooks cannot currently be uninstalled, so proceed accordingly.
     //
     // A ``install_hooks!`` variant exists to let you install multiple hooks at once if separated by a comma.
-    skyline::install_hooks!(titlesequence_playvoicecommon, titlesequence_playsubtitlevoice, titlesequence_oncreate);
+    skyline::install_hook!(titlesequence_playsubtitlevoice);
 }
