@@ -11,9 +11,9 @@ pub struct TitleSequence {
 }
 
 #[skyline::from_offset(0x2206350)]
-unsafe fn titlesequence_oncreate(_this: &TitleSequence, method_info: OptionalMethod);
+pub fn titlesequence_oncreate(_this: &TitleSequence, method_info: OptionalMethod);
 #[skyline::from_offset(0x22068d0)]
-unsafe fn titlesequence_playvoicecommon(_this: &TitleSequence, soundeventname: &'static Il2CppString, isherofemale: bool, method_info: OptionalMethod);
+pub fn titlesequence_playvoicecommon(_this: &TitleSequence, soundeventname: &'static Il2CppString, isherofemale: bool, method_info: OptionalMethod);
 #[skyline::hook(offset = 0x2206ab0)]
 pub fn titlesequence_playsubtitlevoice(_this: &TitleSequence, method_info: OptionalMethod) {
     //Reroll the PID or GID
